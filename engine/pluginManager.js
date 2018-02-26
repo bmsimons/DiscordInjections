@@ -120,11 +120,17 @@ class PluginManager extends EventEmitter {
 
   async load (plugin, force = true, dependency = false) {
     const pluginPath = path.resolve(this.basePath, plugin)
-    if (!fs.existsSync(path.join(pluginPath, 'package.json'))) {
-      throw new Error('plugin not found', plugin)
-    }
+    const corePluginPath = path.resolve(__dirname, "plugins", plugin)
 
-    return this.loadByPath(pluginPath, force, dependency)
+    if (!fs.existsSync(path.join(pluginPath, 'package.json'))) {
+      if (!fs.existsSync(path.join(corePluginPath, 'package.json'))) {
+        throw new Error('plugin not found', plugin)
+      } else {
+        return this.loadByPath(corePluginPath, force, dependency)
+      }
+    } else {
+      return this.loadByPath(pluginPath, force, dependency)
+    }
   }
 
   async unload (name) {
@@ -191,7 +197,9 @@ class PluginManager extends EventEmitter {
 
   async remove (name, unload = true) {
     const pluginPath = path.resolve(this.basePath, name)
-    if (!fs.existsSync(path.join(pluginPath, 'package.json'))) {
+    const corePluginPath = path.resolve(__dirname, "plugins", name)
+
+    if (!fs.existsSync(path.join(pluginPath, 'package.json')) && !fs.existsSync(path.join(corePluginPath, 'package.json'))) {
       throw new Error('plugin not found', name)
     }
 
@@ -202,7 +210,9 @@ class PluginManager extends EventEmitter {
 
   async enable (name, load = false) {
     const pluginPath = path.resolve(this.basePath, name)
-    if (!fs.existsSync(path.join(pluginPath, 'package.json'))) {
+    const corePluginPath = path.resolve(__dirname, "plugins", name)
+
+    if (!fs.existsSync(path.join(pluginPath, 'package.json')) && !fs.existsSync(path.join(corePluginPath, 'package.json'))) {
       throw new Error('plugin not found', name)
     }
 
@@ -216,7 +226,9 @@ class PluginManager extends EventEmitter {
 
   async disable (name, unload = false) {
     const pluginPath = path.resolve(this.basePath, name)
-    if (!fs.existsSync(path.join(pluginPath, 'package.json'))) {
+    const corePluginPath = path.resolve(__dirname, "plugins", name)
+
+    if (!fs.existsSync(path.join(pluginPath, 'package.json')) && !fs.existsSync(path.join(corePluginPath, 'package.json'))) {
       throw new Error('plugin not found', name)
     }
 
