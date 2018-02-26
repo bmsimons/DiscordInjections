@@ -47,7 +47,7 @@ async function closeClient(proc) {
 async function injectClient(base) {
   const app =
     process.platform === "darwin"
-      ? path.join(base, "..", "Resources", "app")
+      ? path.join(base, "..", "..", "Resources", "app")
       : path.join(base, "app")
   if (fs.existsSync(path.join(app, "package.json"))) {
     throw new Error(`some kind of injector is already installed in <${app}>`)
